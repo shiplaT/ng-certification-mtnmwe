@@ -1,0 +1,87 @@
+<h4 class="title">Weather Application</h4>
+
+<div class="container-fluid">
+  <form
+    name="weatherFormDetails"
+    [formGroup]="weatherFormDetails"
+    (ngSubmit)="weatherFormDetails.valid && onSubmit()"
+  >
+    <div class="well">
+      <h2>Enter a zipcode:</h2>
+      <input
+        class="form-control"
+        formControlName="zipcode"
+        placeholder="Zipcode"
+        type="text"
+        maxlength="10"
+        (keypress)="omit_special_char($event)"
+      />
+      <div
+        *ngIf="
+          (weatherFormDetails.get('zipcode').touched ||
+            weatherFormDetails.Invaild ||
+            weatherFormDetails.submitted) &&
+          weatherFormDetails.get('zipcode').errors
+        "
+      >
+        <div
+          *ngIf="
+            weatherFormDetails.get('zipcode').errors.required ||
+            weatherFormDetails.invaild
+          "
+          class="text-danger"
+        >
+          Zipcode is required
+        </div>
+        <div
+          *ngIf="weatherFormDetails.get('zipcode').errors.pattern"
+          class="text-danger"
+        >
+          Zipcode is Invalid
+        </div>
+      </div>
+      <br />
+      <button
+        class="btn btn-primary"
+        id="addLocationBtn"
+        [disabled]="!weatherFormDetails.valid"
+      >
+        Add location
+      </button>
+    </div>
+  </form>
+
+  <div *ngFor="let data of weatherDataArray; let i = index" class="mt-10">
+    <div class="well flex mt-10">
+      <div>
+        <h3>{{ data.data.name }}</h3>
+        <h4 *ngIf="data">
+          Current conditions: {{ data.data.weather[0].main }}
+        </h4>
+        <h4>Temperatures today: {{ data.data.main.temp }}</h4>
+        <p>Current: {{ data.data.main.temp }}</p>
+        <p>Max: {{ data.data.main.temp_max }}</p>
+        <p>Min: {{ data.data.main.temp_min }}</p>
+
+        <p>
+          <a href="{{ data.urlLink }}"
+            >Show 5-day forecast for {{ data.data.name }}</a
+          >
+        </p>
+      </div>
+      <div *ngIf="weatherImg && data">
+        <span class="close" (click)="remove(i)">×</span>
+
+        <img
+          *ngIf="weatherImg[data.data.weather[0].main]"
+          src="{{ orgImgPath + weatherImg[data.data.weather[0].main] }}"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoader" class="spinner-border text-success" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<router-outlet></router-outlet>

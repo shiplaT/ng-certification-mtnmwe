@@ -1,0 +1,34 @@
+<h4 class="title">5 Day Forecast page:</h4>
+<div class="container-fluid">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        5-day forecast for {{ sampleDataJson.city.name }} {{ zipcode }}
+      </h3>
+    </div>
+    <ul
+      class="list-group"
+      *ngFor="let data of sampleDataJson.list; let i = index"
+    >
+      <li class="list-group-item">
+        <div class="text-left">
+        {{ data.dt | dateConverter | date: 'fullDate' }}:
+        {{ data.weather[0].main }}
+        - Min: {{ data.temp.min }} - Max: {{ data.temp.max }}
+        </div>
+       
+
+        <div class="iconSpac text-right">
+          <img
+            class="imgicon"
+            *ngIf="weatherImg[data.weather[0].main]"
+            src="{{ orgImgPath + weatherImg[data.weather[0].main] }}"
+          />
+        </div>
+      </li>
+    </ul>
+  </div>
+  <button class="btn btn-success" (click)="back()">
+    &lt; Back to main page
+  </button>
+</div>
